@@ -1,0 +1,28 @@
+﻿<div class="contain-to-grid">
+    <nav class="top-bar" data-topbar role="navigation">
+        <ul class="title-area">
+            <li class="name" ><h1><a href="#"><img src="client/app/img/quaeroReverse.png" /></a></h1></li>
+            <li class="toggle-topbar menu-icon"><a><span>Menu</span></a></li>
+        </ul>
+        <section class="top-bar-section">
+            <ul class="left">
+                <li class="has-dropdown" ng-repeat="category in nav" ng-class="{'active' : category.name == active_category}">
+                    <a>{{category.name}}</a>
+                    <ul class="dropdown">
+                        <li ng-class="{ active: isActivePage('/' + tile.name)}" ng-repeat="tile in category.pages"><a href="#/{{tile.name}}">{{tile.name}}</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="right">
+                <li class="has-dropdown">
+                    <a><img ng-src="client/app/img/icons/ellipses{{currentEnvironment.environmentType.color}}.png" width="20" height="12" /> {{currentEnvironment.name}}</a>
+                    <ul class="dropdown">
+                        <li ng-repeat="env in availableEnvironments"><a href="#home" ng-click="selectEnvironment(env)"><img ng-src="client/app/img/icons/ellipses{{env.environmentType.color}}.png" width="20" height="12" /> {{env.name}}</a></li>
+                        <li><a href="Account/LogOff">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+    </nav>
+</div>
+

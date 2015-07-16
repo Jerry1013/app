@@ -1,0 +1,9 @@
+﻿<div class="alert-box" ng-class="{alert: displayError(), secondary: displaySecondary(), success: displaySuccess()}">
+    <p>{{message}}</p>
+    <ul ng-show="messageDetails && messageDetails.length > 0">
+        <li ng-repeat="msg in messageDetails">{{msg}}</li>
+    </ul>
+    <div class="progress small-12" ng-class="{alert: displayError(), secondary: displaySecondary(), success: displaySuccess()}" ng-show="progress >= 0">
+        <span class="meter" ng-attr-style="width:{{progress}}%"></span>
+    </div>
+</div>

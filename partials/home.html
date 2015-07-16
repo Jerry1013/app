@@ -1,0 +1,33 @@
+<div class="home-tiles section">
+    <div class="categories row" ng-repeat="category in nav | filter:{name: '!admin'}">
+        <div class="small-12 columns">
+            <div class="category">
+                <div class="category-label">
+                    <div class="category-label-bar">
+
+                    </div>
+                    <div class="category-label-text">
+                        {{category.name}}
+                    </div>
+                </div>
+                <div class="tiles" ng-repeat="tile in category.pages">
+                    <div class="tile plate">
+                        <div class="tile-dot">
+                            <img ng-src="client/app/img/tiles/{{tile.name}}.png">
+                        </div>
+                        <div class="tile-label">
+                            {{tile.name}}
+                        </div>
+                        <a href="#/{{tile.name}}"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div ng-include="'client/app/partials/notifications.html'"></div>
+
+
+
+

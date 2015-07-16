@@ -1,0 +1,173 @@
+﻿<page-heading title="{{title}}" description="{{description}}"></page-heading>
+
+<div class="row" ng-show="alertMessage">
+    <div class="small-12 large-10 columns">
+        <alert-panel message="{{alertMessage}}" message-details="alertDetails" display-type="{{alertDisplayType}}" progress="{{alertProgress}}"></alert-panel>
+    </div>
+</div>
+
+<form name="loadDetailForm" ng-show="displayForm" ng-submit="save()" data-abide novalidate>
+    <div class="row">
+        <div class="small-12 large-10 columns end">
+            <!--Workflow-->
+            <form-field label="Name" do-show-errors="false">
+                <input name="workflowName" type="text" placeholder="Auto-Generated" ng-model="workflow.name" disabled />
+            </form-field>
+            <form-field label="Engine *" error-text="Engine is required">
+                <select name="engine" required ng-model="workflow.engineId" ng-options="o.id as o.name for o in engineOptions" ng-disabled="isFormDisabled" ></select>
+            </form-field>
+            <input id="chkIsActive" name="chkIsActive" type="checkbox" ng-model="workflow.isActive" ng-disabled="isFormDisabled"><label for="chkIsActive">Is Active</label>
+
+            <!--Input-->
+            <h2>Input</h2>
+            <form-field label="Source System *" error-text="Source System is required">
+                <select name="sourceSystem" required ng-model="workflow.sourceSystemId" ng-options="o.id as o.name for o in sourceSystemOptions" ng-disabled="isFormDisabled"></select>
+            </form-field>
+            <br />
+
+            <!--Entity Info / File Layout-->
+            <div class="panel">
+                <div id="panel1" class="content active">
+                    <dl class="tabs" data-tab>
+                        <dd ng-class="{active: isEntityInfoActive}"><a ng-click="isEntityInfoActive = true">Entity Information</a></dd>
+                        <dd ng-class="{active: !isEntityInfoActive}"><a ng-click="isEntityInfoActive = false">File Layout</a></dd>
+                    </dl>
+
+                    <!--Entity Info-->
+                    <div class="tabs-content">
+                        <div class="content" ng-class="{active: isEntityInfoActive}" id="panel1-1">
+                            <label for="sourceEntity">Source Entity</label>
+                            <div class="row collapse">
+                                <div class="small-8 medium-10 columns">
+                                    <select name="sourceEntity" ng-model="curEntity" ng-options="o.entityNm for o in sourceEntities" ng-disabled="isFormDisabled"></select>
+                                </div>
+                                <div class="small-2 medium-1 columns">
+                                    <a class="tiny button postfix" ng-click="addNewSourceEntity()" ng-class="{disabled: isFormDisabled}">Add</a>
+                                </div>
+                                <div class="small-2 medium-1 columns">
+                                    <a class="tiny button postfix" ng-click="removeCurrentSourceEntity()" ng-class="{disabled: isFormDisabled || sourceEntities.length <= 1}">Remove</a>
+                                </div>
+                            </div>
+                            <hr />
+                            <form-field label="Name *" error-text="Name is required and has a max length of 500">
+                                <input name="entityName" type="text" placeholder="" required ng-maxlength="500" ng-model="curEntity.entityNm" ng-disabled="isFormDisabled" />
+                            </form-field>
+                            <form-field label="Description *" error-text="Description is required and has a max length of 1,000">
+                                <input name="entityDescription" type="text" placeholder="" required ng-maxlength="1000" ng-model="curEntity.entityDesc" ng-disabled="isFormDisabled" />
+                            </form-field>
+                            <form-field label="Stage Strategy *" error-text="Stage Strategy is required">
+                                <select name="stageStrategy" required ng-model="curEntity.stageStrategy" ng-options="o for o in stageStrategies" ng-disabled="isFormDisabled"></select>
+                            </form-field>
+
+                            <!--Retrieval Rules-->
+                            <h2><small>Retrieval Rules</small></h2>
+                            <form-field label="File Mask *" error-text="File Mask is required and has a max length of 500">
+                                <input name="fileMask" type="text" placeholder="" ng-maxlength="500" ng-model="curEntity.sourceFileMask" required ng-disabled="isFormDisabled" />
+                            </form-field>
+                            <input id="deleteSourceFile" name="deleteSourceFile" type="checkbox" ng-model="curEntity.deleteSourceFileFlg" ng-disabled="isFormDisabled"><label for="deleteSourceFile">Delete Source File</label>
+                            <input id="unzipFile" name="deleteSourceFile" type="checkbox" ng-model="curEntity.unzipFileFlg" ng-disabled="isFormDisabled"><label for="unzipFile">Un-Zip</label>
+                            <form-field label="Zip File Password" error-text="Zip File Password has a max length of 100">
+                                <input name="zipFilePassword" type="password" placeholder="" ng-maxlength="100" ng-model="curEntity.unzipFilePassword" ng-disabled="isFormDisabled" />
+                            </form-field>
+                            <form-field label="Frequency *" error-text="Frequency is required">
+                                <select name="frequency" required ng-model="curEntity.frequency" ng-options="o for o in frequencyOptions" ng-disabled="isFormDisabled"></select>
+                            </form-field>
+
+                            <!--Control File-->
+                            <h2><small>Control File</small></h2>
+                            <input id="chkHasControlFile" name="deleteSourceFile" type="checkbox" ng-model="curEntity.controlFileFlg" ng-disabled="isFormDisabled"><label for="chkHasControlFile">Has Control File</label>
+                            <div class="row">
+                                <div class="small-6 columns">
+                                    <form-field label="Extension *" error-text="Extension is required">
+                                        <!--<select name="controlFileExtension" ng-required="curEntity.controlFileExt" ng-model="curEntity.controlFileExtension" ng-options="o for o in controlFileExtensionOptions" ng-disabled="isFormDisabled || !curEntity.controlFileFlg"></select>-->
+                                        <input name="controlFileExtension" list="controlFileExtensionList" type="text" placeholder="" ng-required="curEntity.controlFileFlg" ng-model="curEntity.controlFileExtension" ng-maxlength="50" ng-disabled="isFormDisabled || !curEntity.controlFileFlg" />
+                                        <datalist id="controlFileExtensionList">
+                                            <option value="{{option}}" ng-repeat="option in controlFileExtensionOptions">
+                                        </datalist>
+                                    </form-field>
+                                </div>
+                                <div class="small-6 columns">
+                                    <form-field label="Delimiter *" error-text="Delimiter is required">
+                                        <!--<select name="controlFileDelimiter" ng-required="curEntity.controlFileDelimiter" ng-model="curEntity.controlFileDelimiter" ng-options="o for o in controlFileDelimiterOptions" ng-disabled="isFormDisabled || !curEntity.controlFileFlg"></select>-->
+                                        <input name="controlFileDelimiter" list="controlFileDelimiterList" type="text" placeholder="" ng-required="curEntity.controlFileFlg" ng-model="curEntity.controlFileDelimiter" ng-maxlength="50" ng-disabled="isFormDisabled || !curEntity.controlFileFlg" />
+                                        <datalist id="controlFileDelimiterList">
+                                            <option value="{{option}}" ng-repeat="option in controlFileDelimiterOptions">
+                                        </datalist>
+                                    </form-field>
+                                </div>
+                            </div>
+
+                            <!--File Format-->
+                            <h2><small>File Format</small></h2>
+                            <div class="row">
+                                <div class="small-6 columns">
+                                    <form-field label="Header Rows *" error-text="Header Rows is required and must be a valid whole number">
+                                        <input name="headerRows" type="number" placeholder="" required ng-model="curEntity.numHeaderRows" ng-disabled="isFormDisabled" />
+                                    </form-field>
+                                </div>
+                                <div class="small-6 columns">
+                                    <form-field label="Text Qualifier" do-show-errors="false">
+                                        <!--<select name="textQualifier" ng-model="curEntity.textQualifier" ng-options="o for o in textQualifierOptions" ng-disabled="isFormDisabled"></select>-->
+                                        <input name="textQualifier" list="textQualifierList" type="text" placeholder="" ng-model="curEntity.textQualifier" ng-maxlength="50" ng-disabled="isFormDisabled" />
+                                        <datalist id="textQualifierList">
+                                            <option value="{{option}}" ng-repeat="option in textQualifierOptions">
+                                        </datalist>
+                                    </form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="small-6 columns">
+                                    <form-field label="Column Delimiter *" error-text="Column Delimiter is required">
+                                        <!--<select name="columnDelimiter" required ng-model="curEntity.columnDelimiter" ng-options="o for o in columnDelimiterOptions" ng-disabled="isFormDisabled"></select>-->
+                                        <input name="columnDelimiter" list="columnDelimiterList" type="text" placeholder="" required ng-model="curEntity.columnDelimiter" ng-maxlength="50" ng-disabled="isFormDisabled" />
+                                        <datalist id="columnDelimiterList">
+                                            <option value="{{option}}" ng-repeat="option in columnDelimiterOptions">
+                                        </datalist>
+                                    </form-field>
+                                </div>
+                                <div class="small-6 columns">
+                                    <form-field label="Row Delimiter *" error-text="Row Delimiter is required">
+                                        <!--<select name="rowDelimiter" required ng-model="curEntity.rowDelimiter" ng-options="o for o in rowDelimiterOptions" ng-disabled="isFormDisabled"></select>-->
+                                        <input name="rowDelimiter" list="rowDelimiterList" type="text" placeholder="" required ng-model="curEntity.rowDelimiter" ng-maxlength="50" ng-disabled="isFormDisabled" />
+                                        <datalist id="rowDelimiterList">
+                                            <option value="{{option}}" ng-repeat="option in rowDelimiterOptions">
+                                        </datalist>
+                                    </form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="small-6 columns end">
+                                    <input id="truncateStrings" name="truncateStrings" type="checkbox" ng-model="curEntity.allowStringTruncation" ng-disabled="isFormDisabled"><label for="truncateStrings">Truncate Strings</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--File Layout-->
+                        <div class="content" ng-class="{active: !isEntityInfoActive}" id="panel1-2">
+                            <edit-table row-data="fileLayoutRows" columns="fileLayoutColumns" table-options="fileLayoutOptions"></edit-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Output</h2>
+            <form-field label="Schema *" do-show-errors="false">
+                <input type="text" name="outputSchema" placeholder="" required ng-model="workflow.outputSchema" ng-disabled="isFormDisabled" />
+            </form-field>
+            <form-field label="Table *" error-text="Table is required and has a max length of ###">
+                <input type="text" name="outputTable" placeholder="" required ng-maxlength="50" ng-model="workflow.outputTable" ng-disabled="isFormDisabled" />
+            </form-field>
+
+            <div class="row">
+                <div class="small-12 columns">
+                    <div class="right">
+                        <a class="button" ng-click="save()" ng-hide="context === 'view'" ng-disabled="loadDetailForm.$pristine">Save</a>
+                        <a class="button secondary" ng-click="cancel()" ng-hide="context === 'view'">Cancel</a>
+
+                        <a class="button" ng-click="cancel()" ng-show="context === 'view'">Done</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

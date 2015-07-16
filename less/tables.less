@@ -1,0 +1,87 @@
+﻿table {
+    border-collapse: collapse;
+    width:100%;
+    padding:0px;
+    margin:0px;
+    table-layout:auto;
+    th{
+        text-transform:uppercase;
+        cursor: pointer;
+    }
+    th, tr:hover{
+        background-color:@table-head-color;
+    }
+    td, th{
+        position:relative;
+        padding: 6px;
+        border:1px solid @table-cell-border;
+        text-align:center;
+        font-size:12px;
+    }
+    tr:nth-child(odd){
+        background-color:@table-odd;
+    }
+    tr:nth-child(even){
+        background-color:@table-even;
+    }
+    tr:nth-child(odd):hover{
+        background-color:@table-head-color;
+    }
+    tr:nth-child(even):hover{
+        background-color:@table-head-color;
+    }
+}
+
+
+.display-table {
+    //this needs to be re-added here (as it is already defined above for all tables) to make sure it isn't overridden by Foundation's table styles, otherwise the sort icon won't have enough room in a skinny column
+    td, th{
+        position:relative;
+        padding: 6px;
+        border:1px solid @table-cell-border;
+        text-align:center;
+        font-size:12px;
+    }
+
+    //sort icons
+    //keep the background color the same, but add a background image for the sort icon
+    //then use the ::after class to add extra space for the icon, since narrow columns might not have enough space otherwise (you can't use this backgroud syntax within the ::after class directly)
+    .sorting_asc {
+        background: @table-head-color url("../img/icons/sortAscending.png") no-repeat center right;
+    }
+    .sorting_asc::after {
+        content:"";
+        width:10px;
+        display:inline-block;
+    }
+    .sorting_desc {
+        background: @table-head-color url("../img/icons/sortDescending.png") no-repeat center right;
+    }
+    .sorting_desc::after {
+        content:"";
+        width:10px;
+        display:inline-block;
+    }
+}
+
+//decrease the vertical margins on input elements within the edit table control
+.edit-table {
+    td {
+        padding: 0;
+        margin: 0;
+    }
+    input {
+        padding: 0 0 0 0.5rem;
+        margin: 0;
+    }
+    select {
+        padding: 0 0 0 0.25rem;
+        margin: 0;
+    }
+}
+
+    table[disabled] {
+        td {
+            background: @disabled-background !important;
+        }
+    }

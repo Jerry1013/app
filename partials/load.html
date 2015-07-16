@@ -1,0 +1,11 @@
+<page-heading title="Load" description="Data must be loaded before mapping, aggregating, or analyzing"></page-heading>
+
+<div class="row">
+    <div class="medium-12 columns">
+        <a href="#/loadDetail/add" ng-show="hasPermission('ModifyWorkflow')" class="button small right">Add a new workflow</a>
+        <h3>Find a workflow.</h3>
+    </div>
+</div>
+
+<display-table columns="columns" filters="filters" permissions="permissions" display-data="workflows"
+               action-icon-src="{{linkIconSrc}}" action-icon-click="workflowAction(id)" sort-options="sortOptions"></display-table>

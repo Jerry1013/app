@@ -1,0 +1,26 @@
+body{
+	background:@background-behind-site;
+    margin:0px;
+    color:@font-color;
+}
+
+#site-container{
+    margin:0 auto;
+    background:@background;
+    max-width:1024px;
+    position:relative;
+}
+
+//to disable a link, the disabled attribute is only recognized by IE, but the other browsers recognize pointer-events.  so by adding\
+//the disabled attribute, which links this rule, all browsers are supported
+a[disabled]{
+       pointer-events: none !important;
+       cursor: default;
+       color:Gray;
+}
+
+/* temp test styles that should be moved somewhere else if kept */
+
+
+
+

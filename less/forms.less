@@ -1,0 +1,12 @@
+﻿//the default for this is white, which can clash with our site background color
+fieldset legend {
+    background:@background;
+}
+
+//add the error-border class to any form element that you want to highlighted when focused-then-blurred and invalid,
+//but can't use the standard Foundation error display
+.error-border.ng-invalid.ng-touched { border-color: #FA787E }
+
+//add the error-border class to any form element that you want to highlighted when immediately when invalid (without waiting for them to touch the field),
+//but can't use the standard Foundation error display
+.error-border-immediate.ng-invalid { border-color: #FA787E }

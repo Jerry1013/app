@@ -1,0 +1,38 @@
+﻿<div class="row">
+    <div class="medium-4 columns" ng-repeat="filter in filters">
+        <select ng-model="filter_values[filter.name]" ng-options="obj.value as obj.text for obj in filter.options">
+            <option value="">Filter by {{filter.name}}</option>
+        </select>
+    </div>
+    <div class="medium-4 columns" id="searchField" ng-show="has_search">
+        <input type="text" ng-model="search" placeholder="search..." />
+    </div>
+</div>
+
+<div class="row">
+    <div class="medium-12 columns">
+        <table class="display-table">
+            <thead>
+                <tr>
+                    <th ng-repeat="col_name in columns" ng-click="changeSorting(col_name)"
+                        ng-class="{'sorting_asc' : sortOptions.column === col_name && !sortOptions.descending, 'sorting_desc' : sortOptions.column === col_name && sortOptions.descending}">
+                        {{col_name}}
+                    </th>
+                    <th style="width:1.85rem;"></th><!--button column-->
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="dataItem in displayData  | filter:fieldFilter() | filter:search | orderBy:sortOptions.column:sortOptions.descending">
+                    <td ng-repeat="col_name in columns">
+                        {{dataItem[col_name]}}
+                    </td>
+                    <td>
+                        <a><img ng-src="{{actionIconSrc}}" ng-click="click(dataItem.id)" /></a>
+                        <!--<a><img ng-show="hasPermission('ModifyWorkflow')" src="client/app/img/icons/pencil.png" width="16" height="16" /></a>
+            <a><img ng-show="!hasPermission('ModifyWorkflow')" src="client/app/img/icons/magnifyingGlass.png" width="16" height="16" /></a>-->
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,65 @@
+﻿<page-heading title="{{title}}" description="{{description}}"></page-heading>
+
+<div class="row" ng-show="alertMessage">
+    <div class="small-12 large-10 columns">
+        <alert-panel message="{{alertMessage}}" message-details="alertDetails" display-type="{{alertDisplayType}}" progress="{{alertProgress}}"></alert-panel>
+    </div>
+</div>
+
+<form name="mapDetailForm" ng-show="displayForm" ng-submit="save()" data-abide novalidate>
+    <div class="row">
+        <div class="small-12 large-10 columns end">
+            <!--Workflow-->
+            <form-field label="Name" do-show-errors="false">
+                <input name="workflowName" type="text" placeholder="Auto-Generated" ng-model="workflow.name" disabled />
+            </form-field>
+
+            <form-field label="Input Schema *" error-text="Engine is required">
+                <select name="engine" required ng-model="workflow.engineId" ng-options="o.id as o.name for o in engineOptions" ng-disabled="isFormDisabled"></select>
+            </form-field>
+            
+            <input id="chkIsActive" name="chkIsActive" type="checkbox" ng-model="workflow.isActive" ng-disabled="isFormDisabled"><label for="chkIsActive">Is Active</label>
+
+            <!--Input-->
+            <h2>Input</h2>
+            <form-field label="Table *" error-text="Input Table is required">
+                <input type="text" name="inputTable" placeholder="" required ng-model="workflow.inputTable" ng-disabled="isFormDisabled" />
+            </form-field>
+            <br />
+            <form-field label="Keys *" error-text="Input Keys is required">
+                <input type="text" name="inputputKeys" placeholder="" required ng-model="workflow.inputputKeys" ng-disabled="isFormDisabled" />
+            </form-field>
+            <br />
+            <form-field label="Source Expressions *" error-text="Input Source Expressions is required">
+                <input type="text" name="inputSourceExpressions" placeholder="" required ng-model="workflow.inputSourceExpressions" ng-disabled="isFormDisabled" />
+            </form-field>
+            <br />
+
+            <!--Output-->
+            <h2>Output</h2>
+            <form-field label="Schema *" do-show-errors="false">
+                <input type="text" name="outputSchema" placeholder="" required ng-model="workflow.outputSchema" ng-disabled="isFormDisabled" />
+            </form-field>
+            <br />
+            <form-field label="Table *" error-text="Table is required and has a max length of ###">
+                <input type="text" name="outputTable" placeholder="" required ng-maxlength="50" ng-model="workflow.outputTable" ng-disabled="isFormDisabled" />
+            </form-field>
+
+            <div class="row">
+                <div class="small-12 columns">
+                    <div class="right">
+                        <a class="button" ng-click="save()" ng-hide="context === 'view'" ng-disabled="mapDetailForm.$pristine">Save</a>
+                        <a class="button secondary" ng-click="cancel()" ng-hide="context === 'view'">Cancel</a>
+
+                        <a class="button" ng-click="cancel()" ng-show="context === 'view'">Done</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- Missing -->
+<!-- Mapping Input Table -->
+<!-- Mapping Input Keys -->
+<!-- Mapping Input Source Expressions -->

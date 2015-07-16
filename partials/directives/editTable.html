@@ -1,0 +1,67 @@
+﻿<div class="row">
+    <div class="small-12 columns">
+        <input type="text" name="editTableSearch" placeholder="search..." ng-model="filterText" ng-model-options="{ debounce: {'default': 500, 'blur': 0} }" />
+        <table class="edit-table" ng-disabled="::tableOptions.readOnly">
+            <thead>
+                <tr>
+                    <th style="width:1rem"></th> <!--index column-->
+                    <th ng-repeat="col in columns" ng-attr-style="width: {{col.width}}">
+                        {{col.displayName}}
+                    </th>
+                    <th style="width:1rem"></th> <!--remove button-->
+                    <th style="width:1rem"></th> <!--add button-->
+                </tr>
+            </thead>
+            <tbody>
+                <tr dir-paginate="dataItem in rowData | filter:filterText | itemsPerPage: tableOptions.pageSize">
+                    <td class="text-center" style="padding:0 5px;">{{dataItem.editTableRowNum}}</td>
+                    <td ng-repeat="col in columns">
+                        <!--<input type="text" class="error-border" ng-model="dataItem[col.name]" ng-required="::col.isRequired" ng-pattern="::col.validationPattern" ng-disabled="tableOptions.readOnly" />-->
+                        <div ng-switch on="::col.fieldType">
+                            <input ng-switch-when="text" type="text" class="error-border-immediate" ng-model="dataItem[col.name]" ng-model-options="{ getterSetter: true, allowInvalid: true }" ng-required="col.isRequired && !dataItem.isEditTableDefault" ng-pattern="::col.validationPattern" ng-disabled="::tableOptions.readOnly" />
+                            <select ng-switch-when="select" ng-model="dataItem[col.name]" ng-model-options="{ getterSetter: true }" ng-options="o.id as o.name for o in col.options" ng-required="col.isRequired && !dataItem.isEditTableDefault" ng-disabled="::tableOptions.readOnly" />
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <a ng-click="addRecord(dataItem.editTableRowNum - 1)" ng-disabled="::tableOptions.readOnly">+</a>
+                    </td>
+                    <td class="text-center">
+                        <a ng-click="removeRecord(dataItem)" ng-disabled="::tableOptions.readOnly">&#215;</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!--pagination-->
+<br />
+<div class="row">
+    <div class="small-12 columns">
+        <dir-pagination-controls boundary-links="true"></dir-pagination-controls>
+    </div>
+</div>
+
+<a class="button right" data-reveal-id="pasteDataModal" ng-disabled="::tableOptions.readOnly">Batch Update</a>
+<div id="pasteDataModal" class="reveal-modal" data-reveal="">
+    <h2>Batch Update</h2>
+    <p>Paste in a column of text, with each item on its own line, to quickly set all values for a field.</p>
+    <ul class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
+        <li ng-repeat="col in columns">
+            <div>
+                <h4>{{col.displayName}}</h4>
+                <textarea rows="6" ng-model="batchUpdates[col.name]" ng-trim="false" />
+            </div>
+        </li>
+    </ul>
+    <span class="alert label" ng-show="rowData.length > 1">This will replace all existing values</span>
+    <div class="row">
+        <div class="small-12 columns">
+            <div class="right">
+                <a class="button" ng-click="batchSave()">Save</a>
+                <a class="button secondary" ng-click="batchCancel()">Cancel</a>
+            </div>
+        </div>
+    </div>
+    <a class="close-reveal-modal">×</a>
+</div>
